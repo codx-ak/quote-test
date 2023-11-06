@@ -15,9 +15,9 @@ import { GetQuote, GetSearchQuote } from "../api/QuoteAPI";
 import QuoteItem from "../components/QuoteItem";
 
 const Quotes = () => {
-    //quotes perpage state
+  //quotes perpage state
   const [quoterows, setrows] = useState(20);
-//   quotes page no  state
+  //   quotes page no  state
   const [page, setPage] = useState(1);
 
   const queryClient = useQueryClient();
@@ -25,7 +25,7 @@ const Quotes = () => {
   // getting default data from pageno=1 and limit=20
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["quote"],
-    queryFn: () => GetQuote(1, 20)
+    queryFn: () => GetQuote(1, 20),
   });
 
   // getting data based on pages no and limit values
@@ -70,6 +70,16 @@ const Quotes = () => {
     GetQuoteWithPageNo({ page: page, limit: event.target.value });
   };
 
+  if (isLoading) {
+    <Typography variant="h6" textAlign={"center"}>
+      Loading....
+    </Typography>;
+  }
+  if (isError) {
+    <Typography color="red" variant="h6" textAlign="center">
+      Something Error!
+    </Typography>;
+  }
   return (
     <Container>
       <Typography variant="h4" textAlign={"center"} gutterBottom>
@@ -81,11 +91,11 @@ const Quotes = () => {
         direction={"row"}
         p={2}
         spacing={2}
-        flexWrap={'wrap'}
+        flexWrap={"wrap"}
         gap={2}
-        position={'sticky'}
+        position={"sticky"}
         top={0}
-        bgcolor={'white'}
+        bgcolor={"white"}
       >
         <FormControl sx={{ width: { sm: 250, md: 450 } }}>
           <TextField
@@ -114,16 +124,6 @@ const Quotes = () => {
       </Stack>
 
       <Stack alignItems={"center"} direction={"column"} spacing={1}>
-        {isLoading && (
-          <Typography variant="h6" textAlign={"center"}>
-            Loading....
-          </Typography>
-        )}
-        {isError && (
-          <Typography color="red" variant="h6" textAlign="center">
-            Something Error!
-          </Typography>
-        )}
         {data?.results.length ? (
           data.results.map((quote, index) => (
             <QuoteItem quote={quote} key={index} />
@@ -145,7 +145,6 @@ const Quotes = () => {
           ""
         )}
       </Stack>
-
     </Container>
   );
 };
