@@ -15,9 +15,9 @@ import { GetQuote, GetSearchQuote } from "../api/QuoteAPI";
 import QuoteItem from "../components/QuoteItem";
 
 const Quotes = () => {
-    //quotes perpage state
+  //quotes perpage state
   const [quoterows, setrows] = useState(20);
-//   quotes page no  state
+  //   quotes page no  state
   const [page, setPage] = useState(1);
 
   const queryClient = useQueryClient();
@@ -25,11 +25,11 @@ const Quotes = () => {
   // getting default data from pageno=1 and limit=20
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["quote"],
-    queryFn: () => GetQuote(1, 20)
+    queryFn: () => GetQuote(1, 20),
   });
 
   // getting data based on pages no and limit values
-  const { mutateAsync: GetQuoteWithPageNo,isPending } = useMutation({
+  const { mutateAsync: GetQuoteWithPageNo, isPending } = useMutation({
     mutationKey: ["quote"],
     mutationFn: GetQuote,
     onSuccess: (data) => {
@@ -81,11 +81,11 @@ const Quotes = () => {
         direction={"row"}
         p={2}
         spacing={2}
-        flexWrap={'wrap'}
+        flexWrap={"wrap"}
         gap={2}
-        position={'sticky'}
+        position={"sticky"}
         top={0}
-        bgcolor={'white'}
+        bgcolor={"white"}
       >
         <FormControl sx={{ width: { sm: 250, md: 450 } }}>
           <TextField
@@ -114,24 +114,22 @@ const Quotes = () => {
       </Stack>
 
       <Stack alignItems={"center"} direction={"column"} spacing={1}>
-
-        {isLoading || isPending && (
-          <Typography variant="h6" textAlign={"center"}>
-            Loading....
-          </Typography>
-        )}
+        {isLoading ||
+          (isPending && (
+            <Typography variant="h6" textAlign={"center"}>
+              Loading....
+            </Typography>
+          ))}
         {isError && (
           <Typography color="red" variant="h6" textAlign="center">
             Something Error!
           </Typography>
         )}
-        {data?.results.length && !isPending ? (
-          data.results.map((quote, index) => (
-            <QuoteItem quote={quote} key={index} />
-          ))
-        ):<Typography variant="subtitle2" color={"gray"} p={2} textAlign={"center"}>
-        No  Results Found
-      </Typography> }
+        {data?.results.length && !isPending
+          ? data.results.map((quote, index) => (
+              <QuoteItem quote={quote} key={index} />
+            ))
+          : " "}
         {!isLoading && !isPending && !isError && data?.results.length ? (
           <Pagination
             count={data?.totalPages}
@@ -144,7 +142,6 @@ const Quotes = () => {
           ""
         )}
       </Stack>
-
     </Container>
   );
 };
