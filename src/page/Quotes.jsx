@@ -20,6 +20,8 @@ const Quotes = () => {
   //   quotes page no  state
   const [page, setPage] = useState(1);
 
+  const [searchquery,setSearchQuery]=useState("")
+
   const queryClient = useQueryClient();
 
   // getting default data from pageno=1 and limit=20
@@ -40,7 +42,7 @@ const Quotes = () => {
   //getting data from search query
   const { mutateAsync: GetQuoteWithSearch, isPending: isPending_2 } =
     useMutation({
-      mutationKey: ["quote"],
+      mutationKey: ["quote-2"],
       mutationFn: GetSearchQuote,
       onSuccess: (data) => {
         queryClient.setQueryData(["quote"], data);
@@ -50,15 +52,21 @@ const Quotes = () => {
   //changeing page number
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    GetQuoteWithPageNo({ page: newPage, limit: quoterows });
+    if(searchquery.length){
+      GetQuoteWithSearch({query:searchquery,limit:quoterows});
+    }
+    else{
+      GetQuoteWithPageNo({ page: newPage, limit: quoterows });
+    }
   };
 
   //changing search query
   const handleChangeSearch = (event) => {
     const query = String(event.target.value).split(" ").join("+").toLowerCase();
+    setSearchQuery(query)
     if (query.length >= 1) {
       setPage(1);
-      GetQuoteWithSearch(query);
+      GetQuoteWithSearch({query:query,limit:quoterows});
     } else {
       refetch();
     }
@@ -67,8 +75,14 @@ const Quotes = () => {
   // changing pagination
   const handleChangeRowsPerPage = (event) => {
     setPage(1);
-    setrows(Number(event.target.value));
-    GetQuoteWithPageNo({ page: page, limit: event.target.value });
+    const PageRowValue=Number(event.target.value)
+    setrows(PageRowValue);
+    if(searchquery.length){
+      GetQuoteWithSearch({query:searchquery,limit:PageRowValue});
+    }
+    else{
+      GetQuoteWithPageNo({ page: page, limit: PageRowValue });
+    }
   };
   if (isLoading) {
     <Typography variant="h6" textAlign={"center"}>

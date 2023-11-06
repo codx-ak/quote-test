@@ -12,9 +12,9 @@ export const GetQuote=async ({page,limit})=>{
 }
 
 // search  query to get data 
-export const GetSearchQuote=async (query)=>{
+export const GetSearchQuote=async ({query,limit})=>{
     try{
-        const responce= await axios.get(`https://api.quotable.io/search/quotes?query=${query}`)
+        const responce= await axios.get(`https://api.quotable.io/search/quotes?query=${query}&limit=${limit}`)
         return responce.data
     }
     catch(er){
