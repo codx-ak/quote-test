@@ -15,15 +15,20 @@ import { GetQuote, GetSearchQuote } from "../api/QuoteAPI";
 import QuoteItem from "../components/QuoteItem";
 
 const Quotes = () => {
+    //quotes perpage state
   const [quoterows, setrows] = useState(20);
+//   quotes page no  state
   const [page, setPage] = useState(1);
 
   const queryClient = useQueryClient();
+
+  // getting default data from pageno=1 and limit=20
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["quote"],
-    queryFn: () => GetQuote(1, 20),
+    queryFn: () => GetQuote(1, 20)
   });
 
+  // getting data based on pages no and limit values
   const { mutateAsync: GetQuoteWithPageNo } = useMutation({
     mutationKey: ["quote"],
     mutationFn: GetQuote,
@@ -32,6 +37,7 @@ const Quotes = () => {
     },
   });
 
+  //getting data from search query
   const { mutateAsync: GetQuoteWithSearch } = useMutation({
     mutationKey: ["quote"],
     mutationFn: GetSearchQuote,
@@ -40,11 +46,13 @@ const Quotes = () => {
     },
   });
 
+  //changeing page number
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     GetQuoteWithPageNo({ page: newPage, limit: quoterows });
   };
 
+  //changing search query
   const handleChangeSearch = (event) => {
     const query = String(event.target.value).split(" ").join("+").toLowerCase();
     if (query.length >= 1) {
@@ -55,6 +63,7 @@ const Quotes = () => {
     }
   };
 
+  // changing pagination
   const handleChangeRowsPerPage = (event) => {
     setPage(1);
     setrows(Number(event.target.value));
@@ -136,6 +145,7 @@ const Quotes = () => {
           ""
         )}
       </Stack>
+
     </Container>
   );
 };
