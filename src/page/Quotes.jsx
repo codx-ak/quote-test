@@ -67,7 +67,7 @@ const Quotes = () => {
   const handleChangeRowsPerPage = (event) => {
     setPage(1);
     setrows(Number(event.target.value));
-    GetQuoteWithPageNo({ page: 1, limit: event.target.value });
+    GetQuoteWithPageNo({ page: page, limit: event.target.value });
   };
 
   return (
