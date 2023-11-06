@@ -38,13 +38,14 @@ const Quotes = () => {
   });
 
   //getting data from search query
-  const { mutateAsync: GetQuoteWithSearch } = useMutation({
-    mutationKey: ["quote"],
-    mutationFn: GetSearchQuote,
-    onSuccess: (data) => {
-      queryClient.setQueryData(["quote"], data);
-    },
-  });
+  const { mutateAsync: GetQuoteWithSearch, isPending: isPending_2 } =
+    useMutation({
+      mutationKey: ["quote"],
+      mutationFn: GetSearchQuote,
+      onSuccess: (data) => {
+        queryClient.setQueryData(["quote"], data);
+      },
+    });
 
   //changeing page number
   const handleChangePage = (event, newPage) => {
@@ -69,7 +70,16 @@ const Quotes = () => {
     setrows(Number(event.target.value));
     GetQuoteWithPageNo({ page: page, limit: event.target.value });
   };
-
+  if (isLoading) {
+    <Typography variant="h6" textAlign={"center"}>
+      Loading....
+    </Typography>;
+  }
+  if (isError) {
+    <Typography variant="h6" textAlign={"center"}>
+      Somthing Error!{" "}
+    </Typography>;
+  }
   return (
     <Container>
       <Typography variant="h4" textAlign={"center"} gutterBottom>
@@ -112,25 +122,21 @@ const Quotes = () => {
           </Select>
         </FormControl>
       </Stack>
-
       <Stack alignItems={"center"} direction={"column"} spacing={1}>
-        {isLoading ||
-          (isPending && (
-            <Typography variant="h6" textAlign={"center"}>
-              Loading....
-            </Typography>
-          ))}
-        {isError && (
-          <Typography color="red" variant="h6" textAlign="center">
-            Something Error!
+        {isPending || isPending_2 ? (
+          <Typography variant="h6" textAlign={"center"}>
+            Loading....
+          </Typography>
+        ) : data?.results.length ? (
+          data.results.map((quote, index) => (
+            <QuoteItem quote={quote} key={index} />
+          ))
+        ) : (
+          <Typography color={"gray"} p={2}>
+            No Quotes Found
           </Typography>
         )}
-        {data?.results.length && !isPending
-          ? data.results.map((quote, index) => (
-              <QuoteItem quote={quote} key={index} />
-            ))
-          : " "}
-        {!isLoading && !isPending && !isError && data?.results.length ? (
+        {!isLoading && !isPending && !isPending_2 && data?.results.length ? (
           <Pagination
             count={data?.totalPages}
             page={page}
